@@ -5,7 +5,8 @@ const props = defineProps({
   vert: { type: Boolean, default: false }, // 垂直方向
   delay: { type: Number, default: 200 }, // 事件延迟
   area1: { type: Object, default: null }, // 区域1配置
-  area2: { type: Object, default: null } // 区域2配置
+  area2: { type: Object, default: null }, // 区域2配置
+  line1: { type: Object, default: null } //分割线1配置
 });
 const emits = defineEmits(['change']);
 
@@ -27,6 +28,7 @@ const state = reactive({
   mousedown: false, // 鼠标是否按下
   area1: props.area1 ? Object.assign({}, areaDefault, props.area1) : { hidden: true }, // 区域1
   area2: props.area2 ? Object.assign({}, areaDefault, props.area2) : { hidden: true }, // 区域2
+  line1: props.line1 ? Object.assign({}, props.line1) : null, //分割线1配置
   class: computed(() => ({
     'is-vert': props.vert,
     'select-none': state.overlay,
@@ -68,27 +70,8 @@ const state = reactive({
   getCursor: area => {
     if (state[area].hidden) return {};
     if (!state[area].visible) return {};
-    const cursor = {
-      index: Number(area.slice(-1)),
-      value: 'pointer'
-    };
 
-    if (cursor.index === 1) {
-      if (state[area].curSize <= state[area].minSize)
-        cursor.value = props.vert ? 's-resize' : 'e-resize';
-      else if (state[area].curSize >= state[area].maxSize)
-        cursor.value = props.vert ? 'n-resize' : 'w-resize';
-      else cursor.value = props.vert ? 'row-resize' : 'col-resize';
-    }
-    if (cursor.index === 2) {
-      if (state[area].curSize <= state[area].minSize)
-        cursor.value = props.vert ? 'n-resize' : 'w-resize';
-      else if (state[area].curSize >= state[area].maxSize)
-        cursor.value = props.vert ? 's-resize' : 'e-resize';
-      else cursor.value = props.vert ? 'row-resize' : 'col-resize';
-    }
-
-    return { cursor: cursor.value };
+    return { cursor: props.vert ? 's-resize' : 'w-resize' };
   },
   // 计算按钮类
   getButton: area => {
@@ -135,12 +118,15 @@ const clickButton = area => {
   emits('change', area);
 };
 
-watch(() => [state.area1.visible, state.area2.visible], () => {
-  state.active = true;
-  setTimeout(() => {
-    state.active = false;
-  }, 300);
-});
+watch(
+  () => [state.area1.visible, state.area2.visible],
+  () => {
+    state.active = true;
+    setTimeout(() => {
+      state.active = false;
+    }, 300);
+  }
+);
 
 // 抛出区域对象，方便外部控制
 defineExpose({
@@ -165,7 +151,7 @@ defineExpose({
     <!-- 分割线1 -->
     <div
       v-if="!state.area1.hidden"
-      class="st-line st-line1"
+      :class="['st-line', 'st-line1', state.line1 ? state.line1.style : '']"
       :style="state.getCursor('area1')"
       @mousedown.stop="onMouseDown('area1')"
     >
@@ -300,9 +286,14 @@ defineExpose({
   @apply w-full h-full box-border;
 }
 .st-dynamic-area .st-overlay {
-  @apply absolute left-0 right-0 top-0 bottom-0 z-50;
+  @apply absolute left-0 right-0 top-0 bottom-0 z-[99999];
 }
 .st-dynamic-area .st-dynamic {
   @apply duration-300 transition-all !important;
+}
+.my-height {
+  background-color: #bfdbfe !important;
+  height: 6px !important;
+  margin-left: 2px !important;
 }
 </style>

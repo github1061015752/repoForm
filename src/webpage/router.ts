@@ -16,11 +16,23 @@ let routes = [
   },
   {
     path: '/',
-    component: () => import('@/views/Login.vue')
+    component: () => import('@/views/login/Login.vue')
   },
   {
     path: '/login',
-    component: () => import('@/views/Login.vue')
+    component: () => import('@/views/login/Login.vue')
+  },
+  {
+    path: '/form',
+    component: () => import('@/views/form/Form.vue')
+  },
+  {
+    path: '/criRecord',
+    component: () => import('@/views/criminal/CriRecord.vue')
+  },
+  {
+    path: '/statistic',
+    component: () => import('@/views/statistic/Statistic.vue')
   },
   {
     path: '/:pathMatch(.*)*',

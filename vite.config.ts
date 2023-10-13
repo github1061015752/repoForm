@@ -8,7 +8,8 @@ import replace from '@rollup/plugin-replace';
 const root = process.cwd();
 const builtAt = (function getBuildTime() {
   const d = new Date();
-  if (Date.prototype?.toISOString()) {
+
+  if (Date.prototype?.toISOString != null) {
     const ts = d.getTime() - d.getTimezoneOffset() * 60000;
     return new Date(ts).toISOString().slice(0, -1).split('T').join(' ');
   }
@@ -43,8 +44,8 @@ export default defineConfig({
     target: 'es2020',
     rollupOptions: {
       input: {
-        login: resolve(root, './index.html')
-        // app: resolve(root, './app/index.html'),
+        login: resolve(root, './index.html'),
+        redirect: resolve(root, './redirect/index.html')
         // web: resolve(root, './web/index.html'),
         // sdk: resolve(root, './sdk/index.html')
       }

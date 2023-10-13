@@ -101,12 +101,7 @@ watch(
   <div class="st-pangination">
     <el-button-group size="small" class="mr-2">
       <!-- 上一页 -->
-      <el-button
-        class="arrow-left"
-        size="small"
-        :disabled="state.pageIndex <= 1"
-        @click="onClickPrev()"
-      >
+      <el-button class="arrow-left" size="small" :disabled="state.pageIndex <= 1" @click="onClickPrev()">
         <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
           <path
             fill="currentColor"
@@ -115,12 +110,7 @@ watch(
         </svg>
       </el-button>
       <!-- 下一页 -->
-      <el-button
-        class="arrow-right"
-        size="small"
-        :disabled="state.pageIndex >= state.pageTotal"
-        @click="onClickNext()"
-      >
+      <el-button class="arrow-right" size="small" :disabled="state.pageIndex >= state.pageTotal" @click="onClickNext()">
         <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
           <path
             fill="currentColor"
@@ -148,12 +138,7 @@ watch(
         <!-- header -->
         <header>
           <span class="text-sm leading-8">每页显示</span>
-          <el-radio-group
-            v-model="state.pageSize"
-            @change="onPageSizeChange"
-            size="small"
-            class="opacity-95"
-          >
+          <el-radio-group v-model="state.pageSize" @change="onPageSizeChange" size="small" class="opacity-95">
             <el-radio-button v-for="item in pageOption" :key="item" :label="item"></el-radio-button>
           </el-radio-group>
         </header>
@@ -166,10 +151,7 @@ watch(
                 v-for="item in state.pageTotal"
                 @click="onClickItem(item)"
                 :key="item"
-                :class="[
-                  item === state.pageIndex ? 'st-page-item__active' : 'st-page-item',
-                  'whitespace-nowrap'
-                ]"
+                :class="[item === state.pageIndex ? 'st-page-item__active' : 'st-page-item', 'whitespace-nowrap']"
               >
                 {{ item }}
               </div>
@@ -180,12 +162,8 @@ watch(
         <!-- footer -->
         <footer>
           <span class="text-sm leading-9 transform translate-y-px">前往页面</span>
-          <div>
-            <el-input
-              size="small"
-              v-model="state.pageInput"
-              :placeholder="`1 ~ ${state.pageTotal === 0 ? 1 : state.pageTotal}`"
-            ></el-input>
+          <div class="flex items-center">
+            <el-input v-model="state.pageInput" :placeholder="`1 ~ ${state.pageTotal === 0 ? 1 : state.pageTotal}`"></el-input>
             <el-button size="small" type="primary" @click="onClickButton()">
               <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M224 480h640a32 32 0 110 64H224a32 32 0 010-64z" />

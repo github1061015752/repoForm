@@ -1,8 +1,5 @@
-<script setup>
-import HeaderMain from '@/components/HeaderMain.vue';
-</script>
+<script setup></script>
 <template>
-  <HeaderMain :should-show-menu="true"></HeaderMain>
   <el-empty description="暂无此页面"></el-empty>
 </template>
 

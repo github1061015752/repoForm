@@ -1,3 +1,68 @@
+<script setup lang="ts">
+import { reactive, ref } from 'vue';
+import { statisticFilter } from './statistic';
+
+// import { ElMessage } from 'element-plus';
+// import { reactive, watchEffect } from 'vue';
+// import { statistic } from './statistic';
+
+const emits = defineEmits(['filter', 'updateList']);
+
+const filter = reactive({
+  time: 0,
+  analysisSelected: [],
+  creatSeleted: [],
+  creatTypeOpts: {
+    0: { name: '系统预设' },
+    1: { name: '手动创建' }
+  },
+  creatorSeleted: [],
+  creatorOpts: {},
+  dashboardSeleted: [],
+  dashboardOpts: {} as any
+  // refresh() {
+  //   statistic.loading = true;
+  //   statistic.getStatistic().then(() => {
+  //     statistic.loading = false;
+  //     ElMessage.success('刷新成功');
+  //   });
+  // }
+});
+
+const analysis = (result: any, type: string) => {
+  console.log(result, type);
+  if (type === 'analysis')
+    emits('filter', {
+      analysisType: result.map((item: any) => {
+        return +item.key;
+      })
+    });
+
+  if (type === 'createType')
+    emits('filter', {
+      bornType: result.map((item: any) => {
+        return +item.key;
+      })
+    });
+
+  if (type === 'dashboard') {
+    let combineBkId = [] as any; //去重的书签id
+    if (result?.length === 0) {
+      combineBkId = undefined as any;
+    } else {
+      result.forEach((item: any) => {
+        combineBkId.push.apply(combineBkId, filter.dashboardOpts[item.key].statisticList);
+      });
+      combineBkId = Array.from(new Set(combineBkId));
+      combineBkId = combineBkId.filter((n: any) => n);
+    }
+    if (combineBkId?.length === 0) combineBkId[0] = 0;
+    emits('filter', {
+      statisticList: combineBkId
+    });
+  }
+};
+
 function initRange() {
   const end = new Date();
   const start = new Date();
@@ -6,7 +71,16 @@ function initRange() {
   return [start, end];
 }
 
-const dateRangeShortcuts = [
+const shortcuts = [
+  {
+    text: 'Last week',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+      return [start, end];
+    }
+  },
   {
     text: '今天',
     value: () => {
@@ -183,5 +257,88 @@ const dateRangeShortcuts = [
     }
   }
 ];
+const value2 = ref('');
+</script>
 
-export { dateRangeShortcuts };
+<template>
+  <div class="w-full space-x-3 flex items-center justify-between px-5">
+    <section class="w-full space-x-3 flex items-center justify-start">
+      <!-- <el-select
+        v-model="filter.analysisSelected"
+        multiple
+        collapse-tags
+        collapse-tags-tooltip
+        placeholder="请选择模板"
+        style="width: 240px"
+      >
+        <el-option
+          v-for="item in [
+            {
+              value: '模板1',
+              label: '模板1'
+            },
+            {
+              value: '模板2',
+              label: '模板2'
+            },
+            {
+              value: '模板3',
+              label: '模板3'
+            }
+          ]"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select> -->
+
+      <!--      multiple -->
+      <el-select
+        v-model="statisticFilter.type"
+        collapse-tags
+        collapse-tags-tooltip
+        placeholder="请选择类型"
+        style="width: 240px"
+        clearable
+      >
+        <el-option
+          v-for="item in [
+            {
+              value: '0',
+              label: '案底查询'
+            },
+            {
+              value: '1',
+              label: '个人信息箱'
+            }
+          ]"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+
+      <div class="w-1/5">
+        <el-date-picker
+          v-model="statisticFilter.dateRange"
+          type="daterange"
+          unlink-panels
+          range-separator="To"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          :shortcuts="shortcuts"
+        />
+      </div>
+
+      <el-input v-model.lazy="statisticFilter.Search" @blur="analysis($event, 'search')" placeholder="表单唯一秘钥" class="w-1/5" clearable>
+        <template #prefix>
+          <StIcon icon="search" />
+        </template>
+      </el-input>
+    </section>
+
+    <el-button @click="emits('updateList')" class="mr-12 items-end">全部刷新</el-button>
+  </div>
+</template>
+
+<style scoped></style>

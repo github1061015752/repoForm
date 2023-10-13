@@ -94,4 +94,99 @@ const color = [
   '#FFD700'
 ] as const;
 
-export { vars, platformMap, color };
+const formMap = [
+  {
+    field: 'name',
+    cn_name: '姓名'
+  },
+  {
+    field: 'phoneNum',
+    cn_name: '电话号码'
+  },
+  {
+    field: 'phoneNumber',
+    cn_name: '电话号码'
+  },
+  {
+    field: 'IDNumber',
+    cn_name: '身份证号码'
+  },
+  {
+    field: 'isBasicLiving',
+    cn_name: '是否低保'
+  },
+  {
+    field: 'isCriminalRecord',
+    cn_name: '有无案底'
+  },
+  {
+    field: 'isRealNamePhone',
+    cn_name: '手机是否实名并满半年'
+  },
+  {
+    field: 'isFirstCard',
+    cn_name: '银行卡是否是一类卡'
+  },
+  {
+    field: 'departPort',
+    cn_name: '出发点'
+  },
+  {
+    field: 'departDate',
+    cn_name: '出发日期'
+  },
+  {
+    field: 'isAnyTimeDepart',
+    cn_name: '是否能随时出发'
+  },
+  {
+    field: 'localAirportName',
+    cn_name: '当地机场名字'
+  },
+  {
+    field: 'toAirportTime',
+    cn_name: '到机场大概时长'
+  },
+  {
+    field: 'localHighSpeedStationName',
+    cn_name: '当地高铁站名字'
+  },
+  {
+    field: 'toHighSpeedStationTime',
+    cn_name: '到高铁站大概时长'
+  },
+  {
+    field: 'IDFrontImg',
+    cn_name: '身份证头像页'
+  },
+  {
+    field: 'IDNationalImg',
+    cn_name: '身份证国徽页'
+  },
+  {
+    field: 'bankCardImg',
+    cn_name: '银行卡'
+  },
+  {
+    field: 'creditImg',
+    cn_name: '芝麻信用和守约记录'
+  },
+  {
+    field: 'registeredBookImg',
+    cn_name: '户口本'
+  },
+  {
+    field: 'creditReport',
+    cn_name: '征信报告'
+  },
+  {
+    field: 'video',
+    cn_name: '视频'
+  },
+  {
+    field: 'remark',
+    cn_name: '备注'
+  }
+];
+
+export { vars, platformMap, color, formMap };

@@ -4,12 +4,10 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/static/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>个人信息密码箱</title>
-    <script src="./static/serverconfig.js"></script>
+    <title>支付跳转</title>
   </head>
-
-  <body>
-    <div id="app"></div>
-    <script type="module" src="./src/webpage/index.ts"></script>
-  </body>
+  <body></body>
+  <script>
+    location.replace(`${location.origin}/#/criRecord?pay=1`);
+  </script>
 </html>

@@ -3,7 +3,7 @@ import { ajump } from '@/services/domain/jump.js';
 import axios from 'axios';
 
 const http = axios.create({
-  baseURL: window._sjt_dict.base_url
+  baseURL: window._pwb_dict.base_url
   // timeout: 12_000
 });
 
@@ -63,13 +63,15 @@ function handleAxiosRes(res) {
   let error = null;
   let isSuccess = false;
   let data = null;
+  let remoteMessage = '';
 
   if (res instanceof Error) {
-    const { status, statusText } = res.response;
+    const { status, statusText, data: respData } = res.response || res.request || {};
     isError = true;
     error = [status, statusText].join(' ');
     isSuccess = false;
     data = null;
+    remoteMessage = respData?.data?.message || respData?.message || '';
   } else if (res == null) {
     isError = true;
     error = '请检查网络';
@@ -80,11 +82,37 @@ function handleAxiosRes(res) {
     error = null;
     isSuccess = true;
     data = res.data.data || res.data;
+    remoteMessage = res.data.data?.message || res.data?.message || '';
   }
 
-  return { isError, error, isSuccess, data };
+  if (res?.data?.status !== 200) isSuccess = false;
+  return { isError, error, isSuccess, data, res, remoteMessage };
+}
+
+function downloadFile(fileName, { method = 'get', url, params, data, responseType = 'blob' }) {
+  http({ method, url, params, data, responseType }).then(res => {
+    const blob = new Blob([res.data]);
+    const elink = document.createElement('a');
+
+    // @ts-ignore
+    if (!!window.ActiveXObject || 'ActiveXObject' in window) {
+      // 兼容IE
+      // @ts-ignore
+      window.navigator.msSaveBlob(blob, fileName);
+    } else {
+      // 非IE
+      elink.download = fileName;
+    }
+
+    elink.style.display = 'none';
+    elink.href = URL.createObjectURL(blob);
+    document.body.appendChild(elink);
+    elink.click();
+    URL.revokeObjectURL(elink.href); // 释放URL 对象
+    document.body.removeChild(elink);
+  });
 }
 
 window.http = http;
 
-export { http, handleAxiosRes };
+export { http, handleAxiosRes, downloadFile };

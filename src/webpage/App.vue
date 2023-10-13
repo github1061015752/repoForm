@@ -1,26 +1,19 @@
-<script>
-import { defineComponent } from 'vue';
+<script setup>
 import { ElConfigProvider } from 'element-plus';
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
+
+import Menu from '@/views/menu/Menu.vue';
 import StIconSymbol from '@/components/base/st-icon/StIconSymbol.vue';
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-
-export default defineComponent({
-  components: {
-    ElConfigProvider,
-    StIconSymbol
-  },
-  setup() {
-    return {
-      locale: zhCn
-    };
-  }
-});
+const isLoginPage = computed(() => useRoute().path === '/' || useRoute().path.includes('login'));
 </script>
 
 <template>
   <StIconSymbol />
-  <el-config-provider :locale="locale">
+  <el-config-provider :locale="zhCn">
+    <Menu v-if="!isLoginPage"></Menu>
     <router-view></router-view>
   </el-config-provider>
 </template>
@@ -28,10 +21,7 @@ export default defineComponent({
 <style>
 #app {
   width: 100%;
-  min-width: 1366px;
   height: 100%;
-  /* min-height: 768px; */
-  min-height: 600px;
   overflow: hidden;
   background-color: #f8fbff;
 }
